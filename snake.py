@@ -1,49 +1,34 @@
-import time
-
-from queue import Queue
-
-class Snake(Queue):
+from snakequeue import SnakeQueue
+from pgzero.actor import Actor
 
 
+class Snake:
     def __init__(self):
-        super(Snake, self).__init__()
-        # 小蛇蛇初始位置
-        self.pos = [(50, 100)]
-        self.direction = ''
+        self.pos = SnakeQueue()
+        self.body = []
+        self.image = 'snakebody.png'
 
-    # 改变方向
-    def change_direction(self, key):
+        for pos in self.pos:
+            self.body.append(Actor(self.image, pos))
 
-        # 如果按键与自身方向相反, 自身方向不变
-        if self.direction == 'up' and key == 'down':
-            return
-        elif self.direction == 'down' and key == 'up':
-            return
-        elif self.direction == 'left' and key == 'right':
-            return
-        elif self.direction == 'right' and key == 'left':
-            return
+    # 返回是否吃到食物
+    def eat(self, food):
+        for body in self:
+            if body.colliderect(food):
+                return True
 
-        else:
-            self.direction = key
-            return
+        return False
 
-    # 移动, 每次10px
-    def update(self):
-        key = self.direction
-        new_node_x, new_node_y = self.get()
+    def snake_update(self):
+        for pos in self.pos:
+            self.body.append(Actor(self.image, pos))
 
-        if key == 'up':
-            new_node_y -= 10
 
-        elif key == 'down':
-            new_node_y += 10
 
-        elif key == 'left':
-            new_node_x -= 10
 
-        elif key == 'right':
-            new_node_x += 10
+    def __iter__(self):
+        return iter(self.body)
 
-        self.push((new_node_x, new_node_y))
-        self.pop()
+    def __next__(self):
+        return iter(self.body).__next__()
+

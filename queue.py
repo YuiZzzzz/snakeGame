@@ -1,4 +1,5 @@
 
+
 # FIFO队列实现
 class Queue:
     def __init__(self):
