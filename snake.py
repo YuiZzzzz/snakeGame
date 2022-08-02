@@ -13,22 +13,22 @@ class Snake:
 
     # 返回是否吃到食物
     def eat(self, food):
-        for body in self:
+        for body in self.body:
             if body.colliderect(food):
                 return True
 
         return False
 
-    def snake_update(self):
-        for pos in self.pos:
-            self.body.append(Actor(self.image, pos))
+    def snake_update(self, food):
+        if not self.eat(food):
+            self.pos.update()
+
+        else:
+            self.pos.eat()
+            food.create_food()
 
 
 
 
-    def __iter__(self):
-        return iter(self.body)
 
-    def __next__(self):
-        return iter(self.body).__next__()
 
