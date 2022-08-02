@@ -49,6 +49,7 @@ def draw():
     # 绘制蛇蛇身体
     snake.update()
     snake.draw()
+    snake.is_eat(apple)
 
 
 

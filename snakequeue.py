@@ -1,5 +1,4 @@
 import time
-
 from pgzero.actor import Actor
 
 
@@ -16,6 +15,8 @@ class SnakeQueue:
         self.body = [Actor(self.IMG_PATH, self.INIT_POS)]
 
         self.direction = ''
+
+        self.score = 0
 
     # 画出蛇蛇
     def draw(self):
@@ -41,11 +42,12 @@ class SnakeQueue:
             self.direction = key
 
 
-    # 移动
-    def update(self):
+    # 返回队列头部的新节点
+    def new_node(self):
         key = self.direction
         if key == '':
-            return
+            return self.pos[-1]
+
         new_node_x, new_node_y = self.pos[-1]
 
         if key == 'up':
@@ -57,16 +59,33 @@ class SnakeQueue:
         elif key == 'right':
             new_node_x += 10
 
-        self.push((new_node_x, new_node_y))
+        # self.push((new_node_x, new_node_y))
+        # self.pop()
+        return (new_node_x, new_node_y)
+
+    # 更新并移动
+    def update(self):
+        new_pos = self.new_node()
+        self.push(new_pos)
         self.pop()
-        return
 
 
     def is_eat(self, food):
-        food.create_food()
-        is_eat = self.get().colliderect(food.actor)
-        print(is_eat)
-        return is_eat
+
+        # 循环身体的Actor列表
+        for body in self.body:
+            # 如果身体碰撞食物
+            if body.colliderect(food.actor):
+                # 队列末尾处增加一截身体
+                self.push(self.new_node())
+                # 对食物进行更新
+                food.eat()
+                food.create_food()
+                # 增加分数
+                self.score += 1
+                return True
+
+        return False
 
 
 
@@ -88,9 +107,9 @@ class SnakeQueue:
         return last
 
 
-    # 获取末尾的Actor身体
+    # 获取队列末尾元素
     def get(self):
-        return self.body[-1]
+        return (self.pos[-1], self.body[-1])
 
 
     # 返回蛇蛇位置信息队列

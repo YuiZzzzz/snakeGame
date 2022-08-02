@@ -10,16 +10,16 @@ class Apple:
 
     # 随机位置
     def random_pos(self):
-        x = (random.randint(1, 40)) * 10 - 5
-        y = random.randint(1, 40) * 10 - 5
+        x = (random.randint(1, 40)) * 10 - 8
+        y = random.randint(1, 40) * 10 - 8
         self.actor.pos = (x, y)
 
     # 生成随机位置的水果, 并重置eaten属性
     def create_food(self):
-        if self.eaten:
-            self.random_pos()
-            self.eaten = False
+        self.random_pos()
+        self.eaten = False
 
-
+    def eat(self):
+        self.eaten = True
 
 
