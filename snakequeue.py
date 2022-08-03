@@ -7,22 +7,24 @@ class SnakeQueue:
 
     def __init__(self):
         # 小蛇蛇初始位置
-        self.INIT_POS = (50, 100)
+        self.INIT_POS = (55, 105)
         # 小蛇蛇图片
         self.IMG_PATH = 'snakebody.png'
 
         self.pos = [self.INIT_POS]
+
         self.body = [Actor(self.IMG_PATH, self.INIT_POS)]
 
         self.direction = ''
-
         self.score = 0
+        self.alive = True
+
 
     # 画出蛇蛇
     def draw(self):
         for body in self.body:
             body.draw()
-        time.sleep(0.1)
+        time.sleep(0.05)
 
 
     # 改变方向
@@ -42,32 +44,15 @@ class SnakeQueue:
             self.direction = key
 
 
-    # 返回队列头部的新节点
-    def new_node(self):
-        key = self.direction
-        if key == '':
-            return self.pos[-1]
-
-        new_node_x, new_node_y = self.pos[-1]
-
-        if key == 'up':
-            new_node_y -= 10
-        elif key == 'down':
-            new_node_y += 10
-        elif key == 'left':
-            new_node_x -= 10
-        elif key == 'right':
-            new_node_x += 10
-
-        # self.push((new_node_x, new_node_y))
-        # self.pop()
-        return (new_node_x, new_node_y)
-
     # 更新并移动
     def update(self):
-        new_pos = self.new_node()
-        self.push(new_pos)
-        self.pop()
+        if self.alive:
+            new_pos = self.new_node()
+            self.push(new_pos)
+            self.pop()
+            return True
+        else:
+            return False
 
 
     def is_eat(self, food):
@@ -87,7 +72,17 @@ class SnakeQueue:
 
         return False
 
+    def is_die(self):
 
+        return self.alive
+
+
+    # 队列的基本操作 ####################
+    # - push(pos)
+    # - pop()
+    # - new_node()
+    # - get()
+    # - get_pos_queue()
 
     # 队列添加元素
     def push(self, pos):
@@ -106,6 +101,30 @@ class SnakeQueue:
 
         return last
 
+
+    # 返回队列头部的新节点
+    def new_node(self):
+        key = self.direction
+        if key == '':
+            return self.pos[-1]
+
+        new_node_x, new_node_y = self.pos[-1]
+
+        if key == 'up':
+            new_node_y -= 10
+        elif key == 'down':
+            new_node_y += 10
+        elif key == 'left':
+            new_node_x -= 10
+        elif key == 'right':
+            new_node_x += 10
+
+        if new_node_x <= 15 or new_node_x >= 410:
+            self.alive = False
+        elif new_node_y <= 15 or new_node_y >= 410:
+            self.alive = False
+
+        return (new_node_x, new_node_y)
 
     # 获取队列末尾元素
     def get(self):
