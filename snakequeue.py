@@ -24,7 +24,7 @@ class SnakeQueue:
     def draw(self):
         for body in self.body:
             body.draw()
-        time.sleep(0.05)
+        # time.sleep(0.1)
 
 
     # 改变方向
@@ -46,6 +46,9 @@ class SnakeQueue:
 
     # 更新并移动
     def update(self):
+        # TODO
+        # 可以修改更合理的控制速度的方法
+        time.sleep(0.1)
         if self.alive:
             new_pos = self.new_node()
             self.push(new_pos)
@@ -119,9 +122,9 @@ class SnakeQueue:
         elif key == 'right':
             new_node_x += 10
 
-        if new_node_x <= 15 or new_node_x >= 410:
+        if new_node_x <= 10 or new_node_x >= 410:
             self.alive = False
-        elif new_node_y <= 15 or new_node_y >= 410:
+        elif new_node_y <= 10 or new_node_y >= 410:
             self.alive = False
 
         return (new_node_x, new_node_y)

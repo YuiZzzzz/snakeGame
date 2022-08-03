@@ -1,3 +1,5 @@
+import time
+
 import pgzrun
 import random
 from snakequeue import SnakeQueue
@@ -14,7 +16,7 @@ apple = Apple('food.png')
 apple.create_food()
 state = STATE['username']
 username = ''
-high_score = {} # {username:score}
+high_score_storage = {} # {username:score}
 
 
 def on_key_down():
@@ -31,11 +33,15 @@ def on_mouse_down(pos):
 
 
 
-# 监控按键, 并且切换状态
+# 监控按键, 切换状态, 修改得分板
 def update():
     global state, username, snake, apple
 
     if state == STATE['running']:
+
+        # 实时修改得分
+        high_score
+
         if keyboard.UP:
             snake.change_direction('up')
         elif keyboard.DOWN:
@@ -71,7 +77,6 @@ def draw():
     # 文字绘制
     text_format()
 
-
     if state == STATE['running']:
         # 随机绘制一次食物
         apple.actor.draw()
@@ -99,13 +104,17 @@ def text_format():
     h = [30, 60, 100, 130, 170, 200, 260, 300, 340, 380]
 
     for i in range(len(text)):
-        screen.draw.text(
-            text[i],
-            color='white',
-            topleft=(420, h[i]),
-            fontsize=30,
-            shadow=(0.5, 0.5)
-        )
+        draw_text(text[i], 420, h[i])
+
+
+def draw_text(text, x, y):
+    screen.draw.text(
+        text,
+        color='white',
+        topleft=(x, y),
+        fontsize=30,
+        shadow=(0.5, 0.5)
+    )
 
 def keyboard_detector(keyboard):
     text = ''

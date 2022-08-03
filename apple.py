@@ -10,8 +10,8 @@ class Apple:
 
     # 随机位置
     def random_pos(self):
-        x = (random.randint(1, 40)) * 10 - 8
-        y = random.randint(1, 40) * 10 - 8
+        x = (random.randint(1, 40)) * 10
+        y = random.randint(1, 40) * 10
         self.actor.pos = (x, y)
 
     # 生成随机位置的水果, 并重置eaten属性
