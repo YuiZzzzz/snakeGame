@@ -16,14 +16,18 @@ apple = Apple('food.png')
 apple.create_food()
 state = STATE['username']
 username = ''
-high_score_storage = {} # {username:score}
-
+storage = {} # {username:score}
+high_score = 0
 
 def on_key_down():
-    global state, username
+    global state, username, high_score
     if state == STATE['username']:
         if keyboard.SPACE or keyboard.RETURN:
             state = STATE['running']
+            if username in storage.keys():
+                high_score = storage[username]
+            else:
+                high_score = 0
 
         username += keyboard_detector(keyboard)
 
@@ -35,12 +39,16 @@ def on_mouse_down(pos):
 
 # 监控按键, 切换状态, 修改得分板
 def update():
-    global state, username, snake, apple
+    global state, username, snake, apple, high_score
 
     if state == STATE['running']:
 
         # 实时修改得分
-        high_score
+        high_score = max(high_score, snake.score)
+        if username not in storage.keys():
+            storage[username] = high_score
+        else:
+            storage[username] = max(storage[username], high_score)
 
         if keyboard.UP:
             snake.change_direction('up')
@@ -56,6 +64,7 @@ def update():
             state = STATE['gameover']
 
     if state == STATE['gameover']:
+
         username = ''
 
         if keyboard.SPACE or keyboard.RETURN:
@@ -63,6 +72,7 @@ def update():
             apple = Apple('food.png')
             apple.create_food()
             state = STATE['username']
+
 
 
 
@@ -96,12 +106,26 @@ def draw():
 # 控制蛇蛇移动速度
 # clock.schedule_interval(snake.update, 30)
 
-
+# 右侧面板绘制
 def text_format():
 
-    text = ['Player:', username, 'Now score:', str(snake.score), 'Best score:', str(snake.score),
-            'Highscore rank:', str(snake.score), str(snake.score), str(snake.score)]
+    text = ['Player:', username, 'Now score:', str(snake.score), 'Best score:', str(high_score),
+            'Highscore rank:']
+
     h = [30, 60, 100, 130, 170, 200, 260, 300, 340, 380]
+
+    # 统计最高分前三
+    rank = sorted(storage.items(), key=lambda kv: (kv[1], kv[0]))
+    rank.reverse()
+    print(storage)
+    print(rank)
+
+    if len(rank) >= 3:
+        rank = rank[:3]
+
+    for r in rank:
+        temp = r[0] + ':' + str(r[1])
+        text.append(temp)
 
     for i in range(len(text)):
         draw_text(text[i], 420, h[i])
