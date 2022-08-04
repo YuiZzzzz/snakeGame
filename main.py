@@ -9,6 +9,12 @@ TITLE = 'SnakeQueue'
 WIDTH = 620
 HEIGHT = 420
 STATE = {'username':0, 'running':1, 'gameover':2}
+HENSHIN = {'mengxin':Actor('mengxin.png', (WIDTH/2, HEIGHT/2)),
+           'jinqu':Actor('jinqu.png', (WIDTH/2, HEIGHT/2)),
+           'gaoshou':Actor('gaoshou.png', (WIDTH/2, HEIGHT/2)),
+           'dashi':Actor('dashi.png', (WIDTH/2, HEIGHT/2)),
+           'chaoshen':Actor('chaoshen.png', (WIDTH/2, HEIGHT/2))
+           }
 
 
 snake = SnakeQueue()
@@ -18,6 +24,7 @@ state = STATE['username']
 username = ''
 storage = {} # {username:score}
 high_score = 0
+henshin_actor = None
 
 def on_key_down():
     global state, username, high_score
@@ -77,7 +84,7 @@ def update():
 
 
 def draw():
-    global state
+    global state, henshin_actor
 
     # 背景绘制
     screen.fill((217, 229, 243))
@@ -96,15 +103,55 @@ def draw():
         snake.is_eat(apple)
 
 
+        ####################################################
+        ####### Henshin! ###################################
+
+        level = score_to_level(snake.score)
+
+        if level != '':
+            snake.snake_henshin(level)
+            henshin_actor = HENSHIN[level]
+            henshin_actor.draw()
+
+
+
     if state == STATE['gameover']:
         pass
     if state == STATE['username']:
-        pass
+        draw_text('Please enter your name:', 30, 30)
+        draw_text(username, 30, 60)
 
 
 
-# 控制蛇蛇移动速度
-# clock.schedule_interval(snake.update, 30)
+def henshin_action():
+    global henshin_actor
+    if henshin_actor:
+        henshin_actor.x -= 50
+        print(henshin_actor.x)
+        if henshin_actor.x == 110:
+            time.sleep(1)
+
+
+
+
+# 控制变身动画移动速度
+clock.schedule_interval(henshin_action, 0.001)
+
+def score_to_level(score):
+    if score >= 1 and score < 3:
+        return 'mengxin'
+    elif score >= 3 and score < 5:
+        return 'jinqu'
+    elif score >= 5 and score < 7:
+        return 'gaoshou'
+    elif score >= 7 and score < 9:
+        return 'dashi'
+    elif score >= 9:
+        return 'chaoshen'
+
+    else:
+        return ''
+
 
 # 右侧面板绘制
 def text_format():
@@ -117,8 +164,6 @@ def text_format():
     # 统计最高分前三
     rank = sorted(storage.items(), key=lambda kv: (kv[1], kv[0]))
     rank.reverse()
-    print(storage)
-    print(rank)
 
     if len(rank) >= 3:
         rank = rank[:3]

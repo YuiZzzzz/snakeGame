@@ -19,6 +19,11 @@ class SnakeQueue:
         self.score = 0
         self.alive = True
 
+    # 蛇蛇变身
+    def snake_henshin(self, level):
+        self.IMG_PATH = level + '_body.png'
+        for body in self.body:
+            body.image = self.IMG_PATH
 
     # 画出蛇蛇
     def draw(self):
@@ -114,13 +119,13 @@ class SnakeQueue:
         new_node_x, new_node_y = self.pos[-1]
 
         if key == 'up':
-            new_node_y -= 10
+            new_node_y -= 7
         elif key == 'down':
-            new_node_y += 10
+            new_node_y += 7
         elif key == 'left':
-            new_node_x -= 10
+            new_node_x -= 7
         elif key == 'right':
-            new_node_x += 10
+            new_node_x += 7
 
         if new_node_x <= 10 or new_node_x >= 410:
             self.alive = False
