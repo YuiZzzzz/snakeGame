@@ -18,7 +18,7 @@ HENSHIN = {'mengxin':Actor('mengxin.png', (WIDTH/2, HEIGHT/2)),
 
 
 snake = SnakeQueue()
-apple = Apple('food.png')
+apple = Apple('coin.png')
 apple.create_food()
 state = STATE['username']
 username = ''
@@ -87,7 +87,7 @@ def draw():
     global state, henshin_actor
 
     # 背景绘制
-    screen.fill((217, 229, 243))
+    screen.fill((93, 129, 247))
     box = Rect((10, 10), (400, 400))
     screen.draw.filled_rect(box, (255,255,255))
 
@@ -116,10 +116,11 @@ def draw():
 
 
     if state == STATE['gameover']:
-        pass
+        draw_text('Press enter to start a new game', 30, 30, (93, 129, 247), shadow=False)
+
     if state == STATE['username']:
-        draw_text('Please enter your name:', 30, 30)
-        draw_text(username, 30, 60)
+        draw_text('Please enter your name:', 30, 30, (93, 129, 247), shadow=False)
+        draw_text(username, 30, 60, (93, 129, 247), shadow=False)
 
 
 
@@ -127,10 +128,9 @@ def henshin_action():
     global henshin_actor
     if henshin_actor:
         henshin_actor.x -= 50
-        print(henshin_actor.x)
+        # print(henshin_actor.x)
         if henshin_actor.x == 110:
             time.sleep(1)
-
 
 
 
@@ -176,14 +176,22 @@ def text_format():
         draw_text(text[i], 420, h[i])
 
 
-def draw_text(text, x, y):
-    screen.draw.text(
-        text,
-        color='white',
-        topleft=(x, y),
-        fontsize=30,
-        shadow=(0.5, 0.5)
-    )
+def draw_text(text, x, y, color = 'white', shadow = True):
+    if shadow:
+        screen.draw.text(
+            text,
+            color=color,
+            topleft=(x, y),
+            fontsize=30,
+            shadow=(0.5, 0.5)
+        )
+    else:
+        screen.draw.text(
+            text,
+            color=color,
+            topleft=(x, y),
+            fontsize=30
+        )
 
 def keyboard_detector(keyboard):
     text = ''
